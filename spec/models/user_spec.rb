@@ -141,4 +141,13 @@ describe User do
       specify { user_for_invalid_password.should be_false }
     end
   end
+
+  describe "remember_token creation" do
+    before { @user.save }
+
+    its(:remember_token) { should_not be_blank }
+    it "should have new remember_token on each save" do
+      expect { @user.save }.to change(@user, :remember_token)
+    end
+  end
 end
