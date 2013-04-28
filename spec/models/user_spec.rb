@@ -41,4 +41,34 @@ describe User do
     before { @user.email = " " }
     it { should_not be_valid }
   end
+
+  describe "when email is not in valid format" do
+    it "should not be valid" do
+      addresses = ["user@foo,com",
+                   "user_at_foo.org",
+                   "example_user@foo.",
+                   "foo@bar_baz.com",
+                   "foo @ bar.com",
+                   "foo@bar+bax.com",
+                  ]
+      addresses.each do | invalid_address |
+        @user.email = invalid_address
+        @user.should_not be_valid
+      end
+    end
+  end
+
+  describe "when email is in valid format" do
+    it "should be valid" do
+      addresses = ["user@foo.COM",
+                   "A_US-ER@f.b.org",
+                   "frst.lst@foo.jp",
+                   "a+b@baz.cn"
+                  ]
+      addresses.each do | valid_address |
+        @user.email = valid_address
+        @user.should be_valid
+      end
+    end
+  end
 end
