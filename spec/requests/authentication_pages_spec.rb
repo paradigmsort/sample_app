@@ -41,7 +41,7 @@ describe "Authentication" do
       describe "after submission" do
         before { click_button "Sign in" }
 
-        it { should have_selector('title'), text: user.name }
+        it { should have_selector('title', text: user.name) }
       end
     end
   end
