@@ -24,7 +24,7 @@ describe "UserPages" do
       end
     end
 
-    describe "valid signup" do
+    describe "with valid form contents" do
       before do
         fill_in "Name", with: "Example User"
         fill_in "Email", with: "example@user.com"
