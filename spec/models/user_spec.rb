@@ -95,6 +95,16 @@ describe User do
     it { should_not be_valid }
   end
 
+  describe "when email address has non-lower case" do
+    let(:nlc_email) { "Foo@examPLE.cOm" }
+
+    it "should be saved as lower case" do
+      @user.email = nlc_email
+      @user.save
+      @user.reload.email.should == nlc_email.downcase
+    end
+  end
+
   describe "when password is not present" do
     before { @user.password =  @user.password_confirmation = " " }
     it { should_not be_valid }
