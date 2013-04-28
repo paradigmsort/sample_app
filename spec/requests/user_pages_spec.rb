@@ -35,6 +35,12 @@ describe "UserPages" do
       it "should create a user" do
         expect { click_button "Create my account" }.to change(User, :count).by(1)
       end
+
+      describe "after submission" do
+        before { click_button "Create my account" }
+
+        it { should have_selector('title', text:full_title("Example User")) }
+      end
     end
   end
 
