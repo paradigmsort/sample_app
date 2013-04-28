@@ -12,13 +12,10 @@ describe "UserPages" do
   end
 
   describe "User page" do
-    before {
-      @user = User.new(name:"Example User", email: "example@user.com", password: "abcabc", password_confirmation: "abcabc")
-      @user.save
-      visit user_path(@user)
-    }
+    let(:user) { FactoryGirl.create(:user) }
+    before {  visit user_path(user) }
 
-    it { should have_selector('h1', text: @user.name) }
-    it { should have_selector('title', text: @user.name) }
+    it { should have_selector('h1', text: user.name) }
+    it { should have_selector('title', text: user.name) }
   end
 end
