@@ -47,6 +47,8 @@ describe "Authentication" do
         before { click_button "Sign in" }
 
         it { should have_selector('title', text: user.name) }
+        it { should_not have_link('Sign in') }
+        it { should have_link('Sign out') }
       end
     end
   end
