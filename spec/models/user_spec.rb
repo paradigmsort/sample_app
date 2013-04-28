@@ -26,6 +26,17 @@ describe User do
     it { should_not be_valid }
   end
 
+  let(:max_name_length) { 50 }
+  describe "when name is too long" do
+    before { @user.name = "a"*(max_name_length + 1) }
+    it { should_not be_valid }
+  end
+
+  describe "when name is max length" do
+    before { @user.name = "a"*max_name_length }
+    it { should be_valid }
+  end
+
   describe "when email is not present" do
     before { @user.email = " " }
     it { should_not be_valid }
