@@ -35,6 +35,9 @@ describe "StaticPages" do
     let(:heading) { "Sample App" }
     let(:page_title) { "" }
     it_should_behave_like "all static pages"
+    it "should have sign up link" do
+      test_link("Sign up now!", "Sign up")
+    end
   end
 
   describe "Help page" do
