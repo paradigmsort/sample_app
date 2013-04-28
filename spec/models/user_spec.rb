@@ -99,4 +99,9 @@ describe User do
     before { @user.password =  @user.password_confirmation = " " }
     it { should_not be_valid }
   end
+
+  describe "when passwords do not match" do
+    before { @user.password = @user.password_confirmation + 'a' }
+    it { should_not be_valid }
+  end
 end
