@@ -50,6 +50,14 @@ describe "Authentication" do
         it { should_not have_link('Sign in') }
         it { should have_link('Sign out', href: signout_path) }
 
+        describe "persistance" do
+          before { click_link "Home" }
+
+          it { should_not have_link('Sign in') }
+          it { should have_link('Sign out', href: signout_path) }
+          it { should have_selector('h1', text: "Sample App") } # home page
+        end
+
         describe "signing out" do
           before { click_link "Sign out" }
 
