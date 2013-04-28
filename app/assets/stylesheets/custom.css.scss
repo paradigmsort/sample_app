@@ -1,5 +1,8 @@
 @import "bootstrap";
 
+/* colors */
+$grayMediumLight: #eaeaea;
+
 /* universal */
 
 html {
@@ -42,7 +45,7 @@ h2 {
   letter-spacing: -1px;
   margin-bottom: 30px;
   font-weight: normal;
-  color: #999;
+  color: $grayLight;
 }
 
 p {
@@ -72,13 +75,13 @@ p {
 footer {
   margin-top: 45px;
   padding-top: 5px;
-  border-top: 1px solid #eaeaea;
-  color: #999;
+  border-top: 1px solid $grayMediumLight;
+  color: $grayLight;
 
   a {
-    color: #555;
+    color: $gray;
     &:hover {
-      color:#222;
+      color: $grayDarker;
     }
   }
 
