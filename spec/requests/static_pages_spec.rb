@@ -16,6 +16,7 @@ describe "StaticPages" do
       test_link("sample app", "")
       test_link("Home", "")
       test_link("Help", "Help")
+      test_link("Sign in", page_title) # dead link for now
     end
 
     it "should have correct footer links" do
