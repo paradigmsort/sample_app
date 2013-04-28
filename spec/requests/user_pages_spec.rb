@@ -41,6 +41,7 @@ describe "UserPages" do
 
         it { should have_selector('title', text:full_title("Example User")) }
         it { should have_content('Welcome') }
+        it { should have_link('Sign out') }
       end
     end
   end
