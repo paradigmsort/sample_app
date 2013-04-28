@@ -48,6 +48,9 @@ describe "Authentication" do
 
         it { should have_selector('title', text: user.name) }
         it { should_not have_link('Sign in') }
+        it { should have_link('Users') }
+        it { should have_link('Profile', href: user_path(user)) }
+        it { should have_link('Settings') }
         it { should have_link('Sign out', href: signout_path) }
 
         describe "persistance" do
