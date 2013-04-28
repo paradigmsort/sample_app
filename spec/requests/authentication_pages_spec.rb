@@ -13,7 +13,7 @@ describe "Authentication" do
     describe "with invalid info" do
       describe "after sumission" do
         before { click_button "Sign in" }
-        it { should have_selector('title'), text: "Sign in" }
+        it { should have_selector('title', text: "Sign in") }
         it { should have_selector('div.alert.alert-error', text: "Invalid ")}
       end
     end
