@@ -80,4 +80,14 @@ describe User do
 
     it { should_not be_valid }
   end
+
+  describe "when email with alternate capitalization is already taken" do
+    before do
+      user_with_upcase_email = @user.dup
+      user_with_upcase_email.email = @user.email.upcase
+      user_with_upcase_email.save
+    end
+
+    it { should_not be_valid }
+  end
 end
