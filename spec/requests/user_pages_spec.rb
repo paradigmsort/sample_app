@@ -40,6 +40,7 @@ describe "UserPages" do
         before { click_button "Create my account" }
 
         it { should have_selector('title', text:full_title("Example User")) }
+        it { should have_content('Welcome') }
       end
     end
   end
