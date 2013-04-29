@@ -114,6 +114,18 @@ describe "UserPages" do
     end
   end
 
+  describe "friendly forwarding" do
+    let(:user) { FactoryGirl.create(:user) }
+    before do
+      visit edit_user_path(user) #redirected to sign in page
+      fill_in "Email", with: user.email
+      fill_in "Password", with: user.password
+      click_button "Sign in"
+    end
+
+    it { should have_selector('title', text: "Edit user") }
+  end
+
   describe "User page" do
     let(:user) { FactoryGirl.create(:user) }
     before {  visit user_path(user) }
