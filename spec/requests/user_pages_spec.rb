@@ -92,6 +92,13 @@ describe "UserPages" do
       it { should have_selector('div.alert.alert-notice') }
     end
 
+    describe "visiting the user index" do
+      before { visit users_path }
+
+      it { should have_selector("title", text: "Sign in") }
+      it { should have_selector('div.alert.alert-notice') }
+    end
+
     describe "submitting to the update action" do
       before { put user_path(user) }
       specify { response.should redirect_to(signin_path) }
@@ -124,6 +131,9 @@ describe "UserPages" do
     end
 
     it { should have_selector('title', text: "Edit user") }
+  end
+
+  describe "User index page" do
   end
 
   describe "User page" do
