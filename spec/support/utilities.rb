@@ -13,3 +13,10 @@ def test_link(link_name,target_title)
   # check we were linked to a page with the given title
   test_title(target_title)
 end
+
+def sign_in(user)
+  visit signin_path
+  fill_in "Email", with: user.email
+  fill_in "Password", with: user.password
+  click_button "Sign in"
+end

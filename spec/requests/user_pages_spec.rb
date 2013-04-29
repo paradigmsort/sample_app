@@ -48,7 +48,10 @@ describe "UserPages" do
 
   describe "Edit page" do
     let(:user) { FactoryGirl.create(:user) }
-    before { visit edit_user_path(user) }
+    before do
+      sign_in user
+      visit edit_user_path(user)
+    end
 
     it { should have_selector('h1', text: "Update your profile") }
     it { should have_selector('title', text: "Edit user") }
@@ -76,6 +79,22 @@ describe "UserPages" do
       it { should have_link('Sign out', href: signout_path) }
       specify { user.reload.name.should == new_name }
       specify { user.reload.email.should == new_email }
+    end
+  end
+
+  describe "non signed-in users" do
+    let(:user) { FactoryGirl.create(:user) }
+
+    describe "visiting the edit page" do
+      before { visit edit_user_path(user) }
+
+      it { should have_selector("title", text: "Sign in") }
+      it { should have_selector('div.alert.alert-error') }
+    end
+
+    describe "submitting to the update action" do
+      before { put user_path(user) }
+      specify { response.should redirect_to(signin_path) }
     end
   end
 
