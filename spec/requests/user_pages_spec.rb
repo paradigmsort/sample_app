@@ -89,7 +89,7 @@ describe "UserPages" do
       before { visit edit_user_path(user) }
 
       it { should have_selector("title", text: "Sign in") }
-      it { should have_selector('div.alert.alert-error') }
+      it { should have_selector('div.alert.alert-notice') }
     end
 
     describe "submitting to the update action" do
