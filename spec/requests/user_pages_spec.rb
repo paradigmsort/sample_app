@@ -161,6 +161,23 @@ describe "UserPages" do
         end
       end
     end
+
+    describe "delete links" do
+      describe "for administrators" do
+        let(:admin) { FactoryGirl.create(:admin) }
+        before(:each) do
+          sign_in admin
+          visit users_path
+        end
+        it { should have_link('delete', href: user_path(user)) }
+        it { should_not have_link('delete', href: user_path(admin)) }
+      end
+
+      describe "for non-administrators" do
+        it { should_not have_link("delete") }
+      end
+    end
+
   end
 
   describe "User page" do
