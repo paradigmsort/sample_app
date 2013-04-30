@@ -171,6 +171,10 @@ describe "UserPages" do
         end
         it { should have_link('delete', href: user_path(user)) }
         it { should_not have_link('delete', href: user_path(admin)) }
+
+        it "should delete the user" do
+          expect { click_link 'delete' }.to change(User, :count).by(-1)
+        end
       end
 
       describe "for non-administrators" do
