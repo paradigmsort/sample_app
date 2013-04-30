@@ -137,6 +137,14 @@ describe User do
     it { should be_admin }
   end
 
+  describe "admin attribute" do
+    it "is not accessible" do
+      expect do
+       @user.update_attributes(admin: true)
+     end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+   end
+  end
+
   describe "return value of authenticate method" do
     before { @user.save }
     let(:found_user) { User.find_by_email(@user.email) }
