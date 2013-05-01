@@ -170,4 +170,16 @@ describe User do
       expect { @user.save }.to change(@user, :remember_token)
     end
   end
+
+  describe "associated microposts" do
+    before { @user.save }
+
+    describe "retrieval order" do
+      let!(:first_post) { FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago) }
+      let!(:second_post) { FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago) }
+
+      specify { @user.microposts.first.should == second_post }
+      specify { @user.microposts.second.should == first_post }
+    end
+  end
 end
