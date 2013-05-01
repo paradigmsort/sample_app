@@ -13,9 +13,9 @@ require 'spec_helper'
 
 describe Micropost do
   let(:user) { FactoryGirl.create(:user) }
-  before { @micropost = user.microposts.build(content:"Lorem ipsum") }
+  let(:micropost) { FactoryGirl.create(:micropost, user: user) }
 
-  subject { @micropost }
+  subject { micropost }
 
   it { should respond_to(:content) }
   it { should respond_to(:user_id) }
@@ -27,13 +27,13 @@ describe Micropost do
   its(:user) { should == user }
 
   describe "when user id is missing" do
-    before { @micropost.user_id = nil}
+    before { micropost.user_id = nil}
 
     it { should_not be_valid }
   end
 
   describe "when content is empty" do
-    before { @micropost.content = " " }
+    before { micropost.content = " " }
 
     it { should_not be_valid }
   end
@@ -41,7 +41,7 @@ describe Micropost do
   describe "user_id attribute" do
     it "is not accessible" do
       expect do
-       @micropost.update_attributes(user_id: nil)
+        micropost.update_attributes(user_id: nil)
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
   end
