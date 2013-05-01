@@ -73,5 +73,21 @@ describe "Authentication" do
         end
       end
     end
+
+    describe "as non admin user" do
+      describe "submitting the delete action" do
+        let(:non_admin_user) { FactoryGirl.create(:user) }
+        let(:other_user) { FactoryGirl.create(:user) }
+        before do
+          other_user.save
+          sign_in non_admin_user
+        end
+
+        it "should not delete the user" do
+          expect { delete user_path(other_user) }.not_to change(User, :count)
+        end
+      end
+    end
+
   end
 end

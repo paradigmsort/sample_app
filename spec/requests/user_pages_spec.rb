@@ -179,15 +179,6 @@ describe "UserPages" do
 
       describe "for non-administrators" do
         it { should_not have_link("delete") }
-
-        describe "submitting the delete action" do
-          let(:other_user) { FactoryGirl.create(:user) }
-          before { other_user.save }
-
-          it "should not delete the user" do
-            expect { delete user_path(other_user) }.not_to change(User, :count)
-          end
-        end
       end
     end
 
