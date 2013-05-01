@@ -45,4 +45,17 @@ describe Micropost do
       end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
     end
   end
+
+  describe "content length" do
+    describe "too long" do
+      before { micropost.content = "a" * 141 }
+
+      it { should_not be_valid }
+    end
+    describe "max length" do
+      before { micropost.content = "a" * 140 }
+
+      it { should be_valid }
+    end
+  end
 end
