@@ -173,13 +173,22 @@ describe User do
 
   describe "associated microposts" do
     before { @user.save }
+    let!(:first_post) { FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago) }
+    let!(:second_post) { FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago) }
 
     describe "retrieval order" do
-      let!(:first_post) { FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago) }
-      let!(:second_post) { FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago) }
-
       specify { @user.microposts.first.should == second_post }
       specify { @user.microposts.second.should == first_post }
+    end
+
+    it "should be destroyed along with user"  do
+      microposts = @user.microposts.dup
+      @user.destroy
+
+      microposts.should_not be_empty
+      microposts.each do | post |
+        Micropost.find_by_id(post.id).should be_nil
+      end
     end
   end
 end
