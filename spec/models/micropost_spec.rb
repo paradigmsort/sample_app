@@ -36,4 +36,12 @@ describe Micropost do
 
     it { should_not be_valid }
   end
+
+  describe "user_id attribute" do
+    it "is not accessible" do
+      expect do
+       @micropost.update_attributes(user_id: nil)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+  end
 end
