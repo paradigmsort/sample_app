@@ -58,7 +58,7 @@ describe "Authentication" do
 
           it { should_not have_link('Sign in') }
           it { should have_link('Sign out', href: signout_path) }
-          it { should have_selector('h1', text: "Sample App") } # home page
+          it { should have_title('') } # home page
         end
 
         describe "signing out" do
@@ -69,7 +69,7 @@ describe "Authentication" do
           it { should_not have_link('Profile') }
           it { should_not have_link('Settings') }
           it { should_not have_link('Sign out') }
-          it { should have_selector('h1', text: "Sample App") } # home page
+          it { should have_title('') } # home page
         end
       end
     end

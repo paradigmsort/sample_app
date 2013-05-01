@@ -8,7 +8,7 @@ describe "UserPages" do
     before { visit signup_path }
 
     it { should have_selector('h1', text: "Sign up") }
-    it { should have_selector('title', text: full_title("Sign up")) }
+    it { should have_title("Sign up") }
 
     describe "with empty form" do
       it "should not create a user" do
@@ -18,7 +18,7 @@ describe "UserPages" do
       describe "after submission" do
         before { click_button "Create my account" }
 
-        it { should have_selector('title'), text:full_title("Sign up") }
+        it { should have_title("Sign up") }
         it { should have_content('error') }
         it { should_not have_content('digest') }
       end
@@ -39,7 +39,7 @@ describe "UserPages" do
       describe "after submission" do
         before { click_button "Create my account" }
 
-        it { should have_selector('title', text:full_title("Example User")) }
+        it { should have_title("Example User") }
         it { should have_content('Welcome') }
         it { should have_link('Sign out') }
       end
@@ -54,7 +54,7 @@ describe "UserPages" do
     end
 
     it { should have_selector('h1', text: "Update your profile") }
-    it { should have_selector('title', text: "Edit user") }
+    it { should have_title("Edit user") }
     it { should have_link("change", href:"http://gravatar.com/emails") }
 
     describe "with invalid information" do 
@@ -130,7 +130,7 @@ describe "UserPages" do
       click_button "Sign in"
     end
 
-    it { should have_selector('title', text: "Edit user") }
+    it { should have_title("Edit user") }
   end
 
   describe "User index page" do
@@ -189,6 +189,6 @@ describe "UserPages" do
     before {  visit user_path(user) }
 
     it { should have_selector('h1', text: user.name) }
-    it { should have_selector('title', text: user.name) }
+    it { should have_title(user.name) }
   end
 end
