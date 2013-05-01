@@ -14,11 +14,11 @@ describe "Authentication" do
       describe "after sumission" do
         before { click_button "Sign in" }
         it { should have_selector('title', text: "Sign in") }
-        it { should have_selector('div.alert.alert-error', text: "Invalid ")}
+        it { should have_error_message("Invalid ") }
 
         describe "error information should not persist" do
           before { click_link "Home" }
-          it { should_not have_selector('div.alert.alert-error', text: "Invalid ")}
+          it { should_not have_error_message("Invalid ") }
         end
       end
     end
@@ -33,7 +33,7 @@ describe "Authentication" do
         before { click_button "Sign in" }
 
         it { should have_selector('title', text: "Sign in") }
-        it { should have_selector('div.alert.alert-error', text: "Invalid ")}
+        it { should have_error_message("Invalid ") }
       end
     end
 
