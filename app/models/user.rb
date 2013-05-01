@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
   has_secure_password
 
   attr_accessible :email, :name, :password, :password_confirmation
+  has_many :microposts
 
   before_save { |user| user.email = email.downcase }
   before_save { |user| user.remember_token = SecureRandom.urlsafe_base64 }

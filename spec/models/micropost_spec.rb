@@ -13,17 +13,18 @@ require 'spec_helper'
 
 describe Micropost do
   let(:user) { FactoryGirl.create(:user) }
-  before do
-   @micropost = Micropost.new(content:"Lorem ipsum")
-   @micropost.user_id = user.id
- end
+  before { @micropost = user.microposts.build(content:"Lorem ipsum") }
 
   subject { @micropost }
 
   it { should respond_to(:content) }
   it { should respond_to(:user_id) }
+  it { should respond_to(:user) }
 
   it { should be_valid }
+
+  its(:user_id) { should == user.id }
+  its(:user) { should == user }
 
   describe "when user id is missing" do
     before { @micropost.user_id = nil}
