@@ -207,6 +207,14 @@ describe "UserPages" do
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
 
+      describe "other users" do
+        let!(:other_user) { FactoryGirl.create(:user) }
+        let!(:m3) { FactoryGirl.create(:micropost, user: other_user) }
+        before { visit user_path(user) }
+
+        it { should_not have_content(m3.content) }
+      end
+
       describe "pagination" do
         before(:all) { 100.times { FactoryGirl.create(:micropost, user: user) } }
 
