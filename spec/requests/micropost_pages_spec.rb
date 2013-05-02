@@ -22,6 +22,12 @@ describe "MicropostPages" do
         it "should not create a post" do
           expect { click_button "Post" }.not_to change(Micropost, :count)
         end
+
+        describe "error message" do
+          before { click_button "Post" }
+
+          it { should have_content "error" }
+        end
       end
     end
   end
