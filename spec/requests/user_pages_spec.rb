@@ -150,12 +150,14 @@ describe "UserPages" do
       it { should have_selector('div.pagination') }
 
       it "should list each user from page 1" do
+        User.paginate(page: 1).should_not be_empty
         User.paginate(page: 1).each do |user|
           page.should have_selector('li', text: user.name)
         end
       end
 
       it "should not list other users" do
+        User.paginate(page: 2).should_not be_empty
         User.paginate(page: 2).each do |user|
           page.should_not have_selector('li', text: user.name)
         end
@@ -186,8 +188,8 @@ describe "UserPages" do
 
   describe "User page" do
     let(:user) { FactoryGirl.create(:user) }
-    let!(:m1) { FactoryGirl.create(:micropost, user: user, content: "Post 1") }
-    let!(:m2) { FactoryGirl.create(:micropost, user: user, content: "Post 2") }
+    let!(:m1) { FactoryGirl.create(:micropost, user: user) }
+    let!(:m2) { FactoryGirl.create(:micropost, user: user) }
     before {  visit user_path(user) }
 
     it { should have_main_heading(user.name) }
@@ -197,6 +199,26 @@ describe "UserPages" do
       it { should have_content(m1.content) }
       it { should have_content(m2.content) }
       it { should have_content(user.microposts.count) }
+
+      describe "pagination" do
+        before(:all) { 100.times { FactoryGirl.create(:micropost, user: user) } }
+
+        it { should have_selector('div.pagination') }
+
+        it "should list each micropost from page 1" do
+          user.microposts.paginate(page: 1).should_not be_empty
+          user.microposts.paginate(page: 1).each do |post|
+            page.should have_selector('li', text: post.content)
+          end
+        end
+
+        it "should not list other users" do
+          user.microposts.paginate(page: 2).should_not be_empty
+          user.microposts.paginate(page: 2).each do |post|
+            page.should_not have_selector('li', text: post.content)
+          end
+        end
+      end
     end
   end
 end
