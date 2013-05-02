@@ -103,6 +103,16 @@ describe "UserPages" do
       before { put user_path(user) }
       specify { response.should redirect_to(signin_path) }
     end
+
+    describe "trying to create a micropost" do
+      before { post microposts_path }
+      specify { response.should redirect_to(signin_path) }
+    end
+
+    describe "trying to destroy a micropost" do
+      before { delete micropost_path(FactoryGirl.create(:micropost)) }
+      specify { response.should redirect_to(signin_path) }
+    end
   end
 
   describe "as wrong user" do
