@@ -25,11 +25,12 @@ describe "UserPages" do
     end
 
     describe "with valid form contents" do
+      let(:user) { FactoryGirl.build(:user) }
       before do
-        fill_in "Name", with: "Example User"
-        fill_in "Email", with: "example@user.com"
-        fill_in "Password", with: "foobar"
-        fill_in "Confirm Password", with: "foobar"
+        fill_in "Name", with: user.name
+        fill_in "Email", with: user.email
+        fill_in "Password", with: user.password
+        fill_in "Confirm Password", with: user.password
       end
 
       it "should create a user" do
@@ -39,7 +40,7 @@ describe "UserPages" do
       describe "after submission" do
         before { click_button "Create my account" }
 
-        it { should have_title("Example User") }
+        it { should have_title(user.name) }
         it { should have_content('Welcome') }
         it { should have_link('Sign out') }
       end
