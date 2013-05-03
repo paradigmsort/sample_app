@@ -16,6 +16,28 @@ describe "MicropostPages" do
     it { should have_content(user.microposts.count) }
     it { should have_button("Post") }
 
+    describe "pluralization" do
+
+      describe "one post" do
+        before do
+          FactoryGirl.create(:micropost, user: user)
+          visit root_path
+        end
+
+        it { should have_content("micropost") }
+        it { should_not have_content("microposts") }
+      end
+
+      describe "two posts" do
+        before do
+          2.times { FactoryGirl.create(:micropost, user: user) }
+          visit root_path
+        end
+
+        it { should have_content("microposts") }
+      end
+    end
+
     describe "micropost creation" do
 
       describe "with invalid information" do
