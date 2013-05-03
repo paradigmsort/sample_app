@@ -40,7 +40,14 @@ describe "MicropostPages" do
 
         describe "success message" do
           before { click_button "Post" }
+
           it { should have_selector('div.alert.alert-success') }
+
+          describe "should disappear on reload" do
+            before { visit root_path }
+
+            it { should_not have_selector('div.alert-success') }
+          end
         end
       end
 
