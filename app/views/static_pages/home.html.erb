@@ -1,8 +1,16 @@
-<div class="center hero-unit">
-  <% if signed_in? %>
-    <%= render 'users/info' %>
-    <%= render 'microposts/form' %>
-  <% else %>
+<% if signed_in? %>
+  <div class="row">
+    <aside class="span4">
+      <section>
+        <%= render 'users/info' %>
+      </section>
+      <section>
+        <%= render 'microposts/form' %>
+      </section>
+    </aside>
+  </div>
+<% else %>
+  <div class="center hero-unit">
     <h1>Welcome to the Sample App</h1>
     <h2>
       This is the home page for the
@@ -11,7 +19,7 @@
     </h2>
 
     <%= link_to "Sign up now!", signup_path, class: "btn btn-large btn-primary" %>
-  <% end %>
-</div>
+  </div>
 
-<%= link_to image_tag("rails.png", alt: "Rails"), 'http://rubyonrails.org' %>
+  <%= link_to image_tag("rails.png", alt: "Rails"), 'http://rubyonrails.org' %>
+<% end %>
