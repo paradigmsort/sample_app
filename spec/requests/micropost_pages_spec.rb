@@ -17,6 +17,7 @@ describe "MicropostPages" do
     it { should have_button("Post") }
 
     describe "micropost creation" do
+
       describe "with invalid information" do
 
         it "should not create a post" do
@@ -29,6 +30,16 @@ describe "MicropostPages" do
           it { should have_content "error" }
         end
       end
+
+      describe "with valid information" do
+        before { fill_in 'micropost_content', with: "Lorem ipsum" }
+
+        it "should create a new post" do
+          expect { click_button "Post"}.to change(Micropost, :count).by(1)
+        end
+      end
+
     end
+
   end
 end
