@@ -75,7 +75,7 @@ describe "MicropostPages" do
     end
 
     describe "micropost destruction" do
-      before { FactoryGirl.create(:micropost, user:user) }
+      let!(:micropost) { FactoryGirl.create(:micropost, user:user) }
 
       describe "as correct user" do
         describe "on home page" do
@@ -92,6 +92,15 @@ describe "MicropostPages" do
           it "should delete a micropost" do
             expect { click_link "delete" }.to change(Micropost, :count).by(-1)
           end
+        end
+      end
+
+      describe "as incorrect user" do
+        let(:wrong_user) { FactoryGirl.create(:user) }
+        before { sign_in wrong_user }
+
+        it "should not be able to delete the post" do
+          expect { delete micropost_path(micropost) }.not_to change(Micropost, :count)
         end
       end
     end
