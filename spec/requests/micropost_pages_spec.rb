@@ -17,7 +17,6 @@ describe "MicropostPages" do
     it { should have_button("Post") }
 
     describe "pluralization" do
-
       describe "one post" do
         before do
           FactoryGirl.create(:micropost, user: user)
@@ -35,6 +34,29 @@ describe "MicropostPages" do
         end
 
         it { should have_content("microposts") }
+      end
+    end
+
+    describe "pagination" do
+      before do
+        50.times { FactoryGirl.create(:micropost, user: user) }
+        visit root_path
+      end
+
+      it { should have_selector('div.pagination') }
+
+      it "should list each post on page 1" do
+        user.feed.paginate(page: 1).should_not be_empty
+        user.feed.paginate(page: 1).each do |post|
+          page.should have_selector('li', text: post.content )
+        end
+      end
+
+      it "should not list posts from other pages" do
+        user.feed.paginate(page: 2).should_not be_empty
+        user.feed.paginate(page: 2).each do |post|
+          page.should_not have_selector('li', text: post.content)
+        end
       end
     end
 
