@@ -72,8 +72,19 @@ describe "MicropostPages" do
           end
         end
       end
-
     end
 
+    describe "feed" do
+      before do
+        2.times { FactoryGirl.create(:micropost, user: user) }
+        visit root_path
+      end
+
+      it "should show the user's feed" do
+        user.feed.each do |item|
+          page.should have_selector("li##{item.id}", text: item.content)
+        end
+      end
+    end
   end
 end
