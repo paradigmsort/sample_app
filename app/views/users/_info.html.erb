@@ -1,0 +1,10 @@
+<%= gravatar_for current_user, size: 52 %>
+<h1>
+  <%= current_user.name %>
+</h1>
+<span>
+  <%= link_to "View my profile", user_path(current_user) %>
+</span>
+<span>
+  <%= current_user.microposts.count %> microposts
+</span>
