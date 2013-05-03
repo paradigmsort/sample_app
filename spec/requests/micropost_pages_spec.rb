@@ -37,6 +37,11 @@ describe "MicropostPages" do
         it "should create a new post" do
           expect { click_button "Post"}.to change(Micropost, :count).by(1)
         end
+
+        describe "success message" do
+          before { click_button "Post" }
+          it { should have_selector('div.alert.alert-success') }
+        end
       end
 
     end
