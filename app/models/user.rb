@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :email, :name, :password, :password_confirmation
   has_many :microposts, dependent: :destroy
+  has_many :follow_relationships, foreign_key: "follower_id"
 
   before_save { |user| user.email = email.downcase }
   before_save { |user| user.remember_token = SecureRandom.urlsafe_base64 }
