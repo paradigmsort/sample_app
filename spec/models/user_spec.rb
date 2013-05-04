@@ -234,6 +234,18 @@ describe User do
       end
     end
 
+    it "should cease when user is destroyed" do
+      relationships = @user.follow_relationships.dup
+      @user.destroy
+
+      other_user.followed_users.should be_empty
+      other_user.reverse_follow_relationships.should be_empty
+      relationships.should_not be_empty
+      relationships.each do |relationship|
+        FollowRelationship.find_by_id(relationship.id).should be_nil
+      end
+    end
+
     describe "and unfollowing" do
       before { @user.unfollow!(other_user) }
 
