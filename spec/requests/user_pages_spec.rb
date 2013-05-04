@@ -164,6 +164,7 @@ describe "UserPages" do
         User.paginate(page: 1).should_not be_empty
         User.paginate(page: 1).each do |user|
           page.should have_selector('li', text: user.name)
+          page.should have_link("", href: user_path(user))
         end
       end
 
