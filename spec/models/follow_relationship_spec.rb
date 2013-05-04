@@ -33,4 +33,14 @@ describe FollowRelationship do
     end
   end
 
+  describe "one-person relationships" do
+    describe "with no follower" do
+      before { relationship.follower = nil }
+      it { should_not be_valid }
+    end
+    describe "with no one followed" do
+      before { relationship.followed = nil }
+      it { should_not be_valid }
+    end
+  end
 end
