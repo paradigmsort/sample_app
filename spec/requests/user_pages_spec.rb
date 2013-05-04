@@ -203,7 +203,29 @@ describe "UserPages" do
 
     it { should have_main_heading(user.name) }
     it { should have_title(user.name) }
+    it { should_not have_button("Follow") }
+    it { should_not have_button("Unfollow") }
 
+    describe "visit by other user" do
+      let(:other_user) { FactoryGirl.create(:user) }
+      before { sign_in other_user }
+
+      describe "who is not a follower" do
+        before { visit user_path(user) }
+        it { should have_button("Follow") }
+        it { should_not have_button("Unfollow") }
+      end
+
+      describe "who is already a follower" do
+        before do
+          other_user.follow!(user)
+          visit user_path(user)
+        end
+        it { should have_button("Unfollow") }
+        it { should_not have_button("Follow") }
+      end
+
+    end
     describe "no microposts" do
       it { should_not have_selector('div.pagination') }
     end
