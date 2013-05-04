@@ -222,6 +222,18 @@ describe User do
       other_user.followers.should include(@user)
     end
 
+    it "should cease when other user is destroyed" do
+      reverse_relationships = other_user.reverse_follow_relationships.dup
+      other_user.destroy
+
+      @user.followed_users.should be_empty
+      @user.follow_relationships.should be_empty
+      reverse_relationships.should_not be_empty
+      reverse_relationships.each do |relationship|
+        FollowRelationship.find_by_id(relationship.id).should be_nil
+      end
+    end
+
     describe "and unfollowing" do
       before { @user.unfollow!(other_user) }
 
