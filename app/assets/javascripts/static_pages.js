@@ -3,7 +3,7 @@ function saveLength() {
   var remainingElement = document.getElementById("count_remaining");
   var length = textArea.value.length;
   var remaining = 140 - length;
-  remainingElement.innerHTML = remaining.toString() + " characters remaining";
+  remainingElement.innerHTML = remaining.toString() + " characters remaining.";
 }
 
 window.onload = function () {
