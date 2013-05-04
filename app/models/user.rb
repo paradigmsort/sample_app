@@ -19,6 +19,8 @@ class User < ActiveRecord::Base
   has_many :microposts, dependent: :destroy
   has_many :follow_relationships, foreign_key: "follower_id"
   has_many :followed_users, through: :follow_relationships, source: :followed
+  has_many :reverse_follow_relationships, foreign_key: "followed_id", class_name: "FollowRelationship"
+  has_many :followers, through: :reverse_follow_relationships, source: :follower
 
   before_save { |user| user.email = email.downcase }
   before_save { |user| user.remember_token = SecureRandom.urlsafe_base64 }
