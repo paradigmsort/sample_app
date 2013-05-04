@@ -43,4 +43,9 @@ describe FollowRelationship do
       it { should_not be_valid }
     end
   end
+
+  describe "self-relationships" do
+    before { relationship.followed = follower }
+    it { should_not be_valid }
+  end
 end

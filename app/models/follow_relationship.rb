@@ -16,4 +16,10 @@ class FollowRelationship < ActiveRecord::Base
 
   validates :follower_id, presence: true
   validates :followed_id, presence: true
+  validate :different_users
+
+  private
+    def different_users
+      errors.add(:followed_id, "can't be the same as follower") if follower_id == followed_id
+    end
 end
