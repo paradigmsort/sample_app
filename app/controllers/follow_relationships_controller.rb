@@ -1,4 +1,5 @@
 class FollowRelationshipsController < ApplicationController
+  before_filter :signed_in_user
   def create
     @user = User.find(params[:follow_relationship][:followed_id])
     current_user.follow!(@user)
