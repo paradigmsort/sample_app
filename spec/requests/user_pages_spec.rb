@@ -224,6 +224,15 @@ describe "UserPages" do
         before { visit user_path(user) }
         it { should have_button("Follow") }
         it { should_not have_button("Unfollow") }
+
+        describe "clicking the follow button" do
+          it "should increase followed user count" do
+            expect { click_button "Follow" }.to change(other_user.followed_users, :count).by(1)
+          end
+          it "should increase the user's followers count" do
+            expect { click_button "Follow" }.to change(user.followers, :count).by(1)
+          end
+        end
       end
 
       describe "who is already a follower" do
@@ -233,6 +242,15 @@ describe "UserPages" do
         end
         it { should have_button("Unfollow") }
         it { should_not have_button("Follow") }
+
+        describe "clicking the unfollow button" do
+          it "should decrease followed user count" do
+            expect { click_button "Unfollow" }.to change(other_user.followed_users, :count).by(-1)
+          end
+          it "should decrease the user's followers count" do
+            expect { click_button "Unfollow" }.to change(user.followers, :count).by(-1)
+          end
+        end
       end
 
     end
