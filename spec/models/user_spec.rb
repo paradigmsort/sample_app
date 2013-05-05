@@ -201,10 +201,16 @@ describe User do
     before { @user.save }
     let!(:user_post) { FactoryGirl.create(:micropost, user: @user) }
     let!(:unfollowed_post) { FactoryGirl.create(:micropost, user: FactoryGirl.create(:user)) } 
+    let!(:followed_post) do
+      followed_user = FactoryGirl.create(:user)
+      @user.follow!(followed_user)
+      FactoryGirl.create(:micropost, user: followed_user)
+    end
 
     describe "contents" do
       specify { @user.feed.should include(user_post) }
       specify { @user.feed.should_not include(unfollowed_post) }
+      specify { @user.feed.should include(followed_post) }
     end
   end
 
