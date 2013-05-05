@@ -25,5 +25,12 @@ namespace :db do
       end
     end
 
+    user = User.all.first
+    followers = User.all[2..50]
+    followed_users = User.all[3..40]
+
+    followers.each { |follower| follower.follow!(user) }
+    followed_users.each { |followed_user| user.follow!(followed_user) }
+
   end
 end

@@ -28,6 +28,10 @@ describe User do
   it { should respond_to(:admin) }
   it { should respond_to(:microposts) }
   it { should respond_to(:feed) }
+  it { should respond_to(:follow_relationships) }
+  it { should respond_to(:followed_users) }
+  it { should respond_to(:reverse_follow_relationships) }
+  it { should respond_to(:followers) }
 
   it { should be_valid }
 
@@ -201,6 +205,52 @@ describe User do
     describe "contents" do
       specify { @user.feed.should include(user_post) }
       specify { @user.feed.should_not include(unfollowed_post) }
+    end
+  end
+
+  describe "following" do
+    let(:other_user) { FactoryGirl.create(:user) }
+    before do
+      @user.save
+      @user.follow!(other_user)
+    end
+
+    it {should be_following(other_user) }
+    its(:followed_users) { should include(other_user) }
+
+    it "followed user should give a follower" do
+      other_user.followers.should include(@user)
+    end
+
+    it "should cease when other user is destroyed" do
+      reverse_relationships = other_user.reverse_follow_relationships.dup
+      other_user.destroy
+
+      @user.followed_users.should be_empty
+      @user.follow_relationships.should be_empty
+      reverse_relationships.should_not be_empty
+      reverse_relationships.each do |relationship|
+        FollowRelationship.find_by_id(relationship.id).should be_nil
+      end
+    end
+
+    it "should cease when user is destroyed" do
+      relationships = @user.follow_relationships.dup
+      @user.destroy
+
+      other_user.followed_users.should be_empty
+      other_user.reverse_follow_relationships.should be_empty
+      relationships.should_not be_empty
+      relationships.each do |relationship|
+        FollowRelationship.find_by_id(relationship.id).should be_nil
+      end
+    end
+
+    describe "and unfollowing" do
+      before { @user.unfollow!(other_user) }
+
+      it { should_not be_following(other_user) }
+      its(:followed_users) { should_not include(other_user) }
     end
   end
 end

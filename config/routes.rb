@@ -1,7 +1,13 @@
 SampleApp::Application.routes.draw do
-  resources :users
+  resources :users do
+    member do
+      get :following, :followers
+    end
+  end
+
   resources :sessions, only: [:new, :create, :destroy] #updating a session is nonsense
   resources :microposts, only: [:create, :destroy]
+  resources :follow_relationships, only: [:create, :destroy]
 
   root :to => "static_pages#home"
 

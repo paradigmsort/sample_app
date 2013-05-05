@@ -114,6 +114,16 @@ describe "UserPages" do
       before { delete micropost_path(FactoryGirl.create(:micropost)) }
       specify { response.should redirect_to(signin_path) }
     end
+
+    describe "visiting the following page" do
+      before { visit following_user_path(user) }
+      it { should have_title("Sign in") }
+    end
+
+    describe "visiting the followers page" do
+      before { visit followers_user_path(user) }
+      it { should have_title("Sign in") }
+    end
   end
 
   describe "as wrong user" do
@@ -204,7 +214,47 @@ describe "UserPages" do
 
     it { should have_main_heading(user.name) }
     it { should have_title(user.name) }
+    it { should_not have_button("Follow") }
+    it { should_not have_button("Unfollow") }
 
+    describe "visit by other user" do
+      let(:other_user) { FactoryGirl.create(:user) }
+      before { sign_in other_user }
+
+      describe "who is not a follower" do
+        before { visit user_path(user) }
+        it { should have_button("Follow") }
+        it { should_not have_button("Unfollow") }
+
+        describe "clicking the follow button" do
+          it "should increase followed user count" do
+            expect { click_button "Follow" }.to change(other_user.followed_users, :count).by(1)
+          end
+          it "should increase the user's followers count" do
+            expect { click_button "Follow" }.to change(user.followers, :count).by(1)
+          end
+        end
+      end
+
+      describe "who is already a follower" do
+        before do
+          other_user.follow!(user)
+          visit user_path(user)
+        end
+        it { should have_button("Unfollow") }
+        it { should_not have_button("Follow") }
+
+        describe "clicking the unfollow button" do
+          it "should decrease followed user count" do
+            expect { click_button "Unfollow" }.to change(other_user.followed_users, :count).by(-1)
+          end
+          it "should decrease the user's followers count" do
+            expect { click_button "Unfollow" }.to change(user.followers, :count).by(-1)
+          end
+        end
+      end
+
+    end
     describe "no microposts" do
       it { should_not have_selector('div.pagination') }
     end
@@ -243,6 +293,82 @@ describe "UserPages" do
           user.microposts.paginate(page: 2).should_not be_empty
           user.microposts.paginate(page: 2).each do |post|
             page.should_not have_selector('li', text: post.content)
+          end
+        end
+      end
+    end
+  end
+
+  describe "followers/following" do
+    let(:user) { FactoryGirl.create(:user) }
+    let(:other_user) { FactoryGirl.create(:user) }
+    before { user.follow!(other_user) }
+
+    describe "followed_users (following)" do
+      before do
+        sign_in user
+        visit following_user_path(user)
+      end
+
+      it { should have_title('Following') }
+      it { should have_selector('h3', text: "Following") }
+      it { should have_link(other_user.name, href: user_path(other_user)) }
+
+      describe "pagination" do
+        before(:all) do
+          50.times { user.follow!(FactoryGirl.create(:user)) }
+          visit following_user_path(user)
+        end
+        after(:all) { User.delete_all }
+
+        it { should have_selector('div.pagination') }
+
+        it "should list each user from page 1" do
+          user.followed_users.paginate(page: 1).should_not be_empty
+          user.followed_users.paginate(page: 1).each do |user|
+            page.should have_selector('li', text: user.name)
+          end
+        end
+
+        it "should not list other users" do
+          user.followed_users.paginate(page: 2).should_not be_empty
+          user.followed_users.paginate(page: 2).each do |user|
+            page.should_not have_selector('li', text: user.name)
+          end
+        end
+      end
+    end
+
+    describe "followers" do
+      before do
+        sign_in other_user
+        visit followers_user_path(other_user)
+      end
+
+      it { should have_title('Followers') }
+      it { should have_selector('h3', text: "Followers") }
+      it { should have_link(user.name, href: user_path(user)) }
+
+      describe "pagination" do
+        before(:all) do
+          50.times { FactoryGirl.create(:user).follow!(other_user) }
+          visit followers_user_path(other_user)
+        end
+        after(:all) { User.delete_all }
+
+        it { should have_selector('div.pagination') }
+
+        it "should list each user from page 1" do
+          other_user.followers.paginate(page: 1).should_not be_empty
+          other_user.followers.paginate(page: 1).each do |user|
+            page.should have_selector('li', text: user.name)
+          end
+        end
+
+        it "should not list other users" do
+          other_user.followers.paginate(page: 2).should_not be_empty
+          other_user.followers.paginate(page: 2).each do |user|
+            page.should_not have_selector('li', text: user.name)
           end
         end
       end

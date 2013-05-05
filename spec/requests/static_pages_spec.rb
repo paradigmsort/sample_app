@@ -38,6 +38,19 @@ describe "StaticPages" do
     it "should have sign up link" do
       test_link("Sign up now!", "Sign up")
     end
+
+    describe "for signed-in users" do
+      let(:user) { FactoryGirl.create(:user) }
+      let(:other_user) { FactoryGirl.create(:user) }
+      before do
+        sign_in user
+        other_user.follow!(user)
+        visit root_path
+      end
+
+      it { should have_link("0 following", href: following_user_path(user)) }
+      it { should have_link("1 followers", href: followers_user_path(user)) }
+    end
   end
 
   describe "Help page" do

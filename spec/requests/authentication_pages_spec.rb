@@ -97,5 +97,22 @@ describe "Authentication" do
         expect { delete user_path(admin_user) }.not_to change(User, :count)
       end
     end
+
+    describe "authorization" do
+      describe "for non-signed-in user" do
+        let(:user) { FactoryGirl.create(:user) }
+
+        describe "in the FollowRelationships controller" do
+          describe "submitting the create action" do
+            before { post follow_relationships_path }
+            specify { response.should redirect_to(signin_path) }
+          end
+          describe "submitting the delete action" do
+            before { delete follow_relationship_path(1) }
+            specify { response.should redirect_to(signin_path) }
+          end
+        end
+      end
+    end
   end
 end
