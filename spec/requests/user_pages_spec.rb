@@ -294,6 +294,30 @@ describe "UserPages" do
       it { should have_title('Following') }
       it { should have_selector('h3', text: "Following") }
       it { should have_link(other_user.name, href: user_path(other_user)) }
+
+      describe "pagination" do
+        before(:all) do
+          50.times { user.follow!(FactoryGirl.create(:user)) }
+          visit following_user_path(user)
+        end
+        after(:all) { User.delete_all }
+
+        it { should have_selector('div.pagination') }
+
+        it "should list each user from page 1" do
+          user.followed_users.paginate(page: 1).should_not be_empty
+          user.followed_users.paginate(page: 1).each do |user|
+            page.should have_selector('li', text: user.name)
+          end
+        end
+
+        it "should not list other users" do
+          user.followed_users.paginate(page: 2).should_not be_empty
+          user.followed_users.paginate(page: 2).each do |user|
+            page.should_not have_selector('li', text: user.name)
+          end
+        end
+      end
     end
 
     describe "followers" do
@@ -305,6 +329,30 @@ describe "UserPages" do
       it { should have_title('Followers') }
       it { should have_selector('h3', text: "Followers") }
       it { should have_link(user.name, href: user_path(user)) }
+
+      describe "pagination" do
+        before(:all) do
+          50.times { FactoryGirl.create(:user).follow!(other_user) }
+          visit followers_user_path(other_user)
+        end
+        after(:all) { User.delete_all }
+
+        it { should have_selector('div.pagination') }
+
+        it "should list each user from page 1" do
+          other_user.followers.paginate(page: 1).should_not be_empty
+          other_user.followers.paginate(page: 1).each do |user|
+            page.should have_selector('li', text: user.name)
+          end
+        end
+
+        it "should not list other users" do
+          other_user.followers.paginate(page: 2).should_not be_empty
+          other_user.followers.paginate(page: 2).each do |user|
+            page.should_not have_selector('li', text: user.name)
+          end
+        end
+      end
     end
   end
 end
