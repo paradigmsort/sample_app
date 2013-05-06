@@ -199,10 +199,11 @@ describe User do
 
   describe "feed" do
     before { @user.save }
+    let(:unfollowed_user) { FactoryGirl.create(:user) }
+    let(:followed_user) { FactoryGirl.create(:user) }
     let!(:user_post) { FactoryGirl.create(:micropost, user: @user) }
-    let!(:unfollowed_post) { FactoryGirl.create(:micropost, user: FactoryGirl.create(:user)) } 
+    let!(:unfollowed_post) { FactoryGirl.create(:micropost, user: unfollowed_user) } 
     let!(:followed_post) do
-      followed_user = FactoryGirl.create(:user)
       @user.follow!(followed_user)
       FactoryGirl.create(:micropost, user: followed_user)
     end
@@ -211,7 +212,31 @@ describe User do
       specify { @user.feed.should include(user_post) }
       specify { @user.feed.should_not include(unfollowed_post) }
       specify { @user.feed.should include(followed_post) }
+
+      describe "at_replies" do
+        let(:replier) { FactoryGirl.create(:user) }
+        let(:replier_follower) { FactoryGirl.create(:user) }
+        let(:user_follower) { FactoryGirl.create(:user) }
+        let(:both_follower) { FactoryGirl.create(:user) }
+        let!(:at_reply) { FactoryGirl.create(:micropost, user: replier, in_reply_to: @user.id) }
+        before do
+          replier_follower.follow!(replier)
+          user_follower.follow!(@user)
+          both_follower.follow!(replier)
+          both_follower.follow!(@user)
+        end
+
+        specify { replier.feed.should include(at_reply) }
+        specify { both_follower.feed.should include(at_reply) }
+        specify { @user.feed.should include(at_reply) } # on twitter this goes in your mentions tab, not your timeline
+                                                        # unless you are following the replier. We don't have a mentions tab
+                                                        # so relax this requirement for now
+        specify { user_follower.feed.should_not include(at_reply) }
+        specify { replier_follower.feed.should_not include(at_reply) }
+
+      end
     end
+
   end
 
   describe "following" do

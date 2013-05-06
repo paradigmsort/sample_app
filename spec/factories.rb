@@ -13,5 +13,10 @@ FactoryGirl.define do
   factory :micropost do
     sequence(:content) { "Lorem ipsum #{n}" }
     user
+    in_reply_to nil
+
+    after(:create) do |micropost, evaluator|
+      micropost.content = "@" + micropost.in_reply_to.to_s + " " + micropost.content unless micropost.in_reply_to.nil?
+    end
   end
 end

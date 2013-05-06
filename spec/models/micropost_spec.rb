@@ -20,11 +20,13 @@ describe Micropost do
   it { should respond_to(:content) }
   it { should respond_to(:user_id) }
   it { should respond_to(:user) }
+  it { should respond_to(:in_reply_to) }
 
   it { should be_valid }
 
   its(:user_id) { should == user.id }
   its(:user) { should == user }
+  its(:in_reply_to) { should be_nil }
 
   describe "when user id is missing" do
     before { micropost.user_id = nil}
