@@ -18,6 +18,15 @@ class Micropost < ActiveRecord::Base
 
   default_scope order: 'microposts.created_at DESC'
 
+  AT_REPLY_REGEX = /\A@(\d+)/
+  before_save do |micropost|
+    AT_REPLY_REGEX.match(micropost.content) do |m|
+      unless m.nil? then
+        micropost.in_reply_to = m[1].to_i
+      end
+    end
+  end
+
   def self.from_users_followed_by(user)
     followed_user_ids = "SELECT followed_id FROM follow_relationships
                          WHERE follower_id = :user_id"

@@ -60,4 +60,21 @@ describe Micropost do
       it { should be_valid }
     end
   end
+
+  describe "no in_reply_to" do
+    before { micropost.save }
+
+    its(:in_reply_to) { should be_nil }
+  end
+
+  describe "in_reply_to" do
+      let(:target_user) { FactoryGirl.create(:user) }
+    before do
+      micropost.content = "@" + target_user.id.to_s + " " + micropost.content
+      micropost.save
+    end
+
+    it { should be_valid }
+    its(:in_reply_to) { should == target_user.id }
+  end
 end
