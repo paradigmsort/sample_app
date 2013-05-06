@@ -68,13 +68,24 @@ describe Micropost do
   end
 
   describe "in_reply_to" do
-      let(:target_user) { FactoryGirl.create(:user) }
-    before do
-      micropost.content = "@" + target_user.id.to_s + " " + micropost.content
-      micropost.save
+    let(:target_user) { FactoryGirl.create(:user) }
+    describe "a valid user" do
+      before do
+        micropost.content = "@" + target_user.id.to_s + " " + micropost.content
+        micropost.save
+      end
+
+      it { should be_valid }
+      its(:in_reply_to) { should == target_user.id }
     end
 
-    it { should be_valid }
-    its(:in_reply_to) { should == target_user.id }
+    describe "an invalid user" do
+      before do
+        micropost.content = "@" + target_user.id.to_s + " " + micropost.content
+        target_user.destroy
+      end
+
+      it { should_not be_valid }
+    end
   end
 end

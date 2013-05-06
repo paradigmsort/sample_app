@@ -9,16 +9,29 @@
 #  updated_at :datetime         not null
 #
 
+AT_REPLY_REGEX = /\A@(\d+)/
+
+class AtReplyValidator < ActiveModel::EachValidator
+  def validate_each(record, attribute, value)
+    AT_REPLY_REGEX.match(value) do |m|
+      unless m.nil? then
+        if User.find_by_id(m[1].to_i).nil?
+          record.errors[attribute] << (options[:message] || "can't be a reply to non-existant user " + m[1])
+        end
+      end
+    end
+  end
+end
+
 class Micropost < ActiveRecord::Base
   attr_accessible :content
   belongs_to :user
 
   validates :user_id, presence: true
-  validates :content, presence: true, length: { maximum: 140 }
+  validates :content, presence: true, length: { maximum: 140 }, at_reply: true
 
   default_scope order: 'microposts.created_at DESC'
 
-  AT_REPLY_REGEX = /\A@(\d+)/
   before_save do |micropost|
     AT_REPLY_REGEX.match(micropost.content) do |m|
       unless m.nil? then
